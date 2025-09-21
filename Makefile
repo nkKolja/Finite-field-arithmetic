@@ -1,7 +1,6 @@
 # Makefile
 CC = gcc
-# CFLAGS += -std=gnu11 -O3 -Ofast -Wall -Wextra -Wcomment -Wno-sign-compare -Wno-unused -Wno-unused-function -Wno-unused-variable -Wno-sign-compare
-CFLAGS +=  -std=gnu11 -O3 -Ofast -Wall -Wextra -Wno-unused-function
+CFLAGS +=  -std=gnu11 -O3 -ffast-math -Wall -Wextra -Wno-unused-function
 LDFLAGS += -lgmp
 .NOTPARALLEL:
 
