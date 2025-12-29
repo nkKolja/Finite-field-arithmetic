@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test-generic:
+    name: Generic Tests (x86_64)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgmp-dev
+      
+      - name: Build all (Generic)
+        run: make all OPT_LEVEL=GENERIC
+      
+      - name: Test 64-bit prime
+        run: ./arith64
+      
+      - name: Test 128-bit prime
+        run: ./arith128
+      
+      - name: Test 192-bit prime
+        run: ./arith192
+      
+      - name: Test 256-bit prime
+        run: ./arith256
+      
+      - name: Test 512-bit prime
+        run: ./arith512
+      
+      - name: Clean
+        run: make clean
+      
+      - name: Build and test with alternative primes
+        run: |
+          make all OPT_LEVEL=GENERIC ALT_PRIMES=ALT
+          ./arith64
+          ./arith128
+          ./arith192
+          ./arith256
+          ./arith512
