@@ -251,7 +251,7 @@ void f_inv(const f_elm_t a, f_elm_t b)
 
     // First 128 bits = 2^7 bits
     for(j = 0; j < 7; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 2) f_copy(t[0], t[2]);  // t[2] = a^(2^8  - 1) = a^0b 11111111
@@ -348,7 +348,7 @@ void f_leg(const f_elm_t a, unsigned char *b)
 
     // First 128 bits = 2^7 bits
     for(j = 0; j < 7; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 2) f_copy(t[0], t[2]);  // t[2] = a^(2^8  - 1) = a^0b 11111111
@@ -470,7 +470,7 @@ void f_sqrt(const f_elm_t a, f_elm_t b)
 
     // First 128 bits = 2^7 bits
     for(j = 0; j < 7; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[6]);  // t[6] = a^(2^2  - 1) = a^0b 11
@@ -580,7 +580,7 @@ void f_inv(const f_elm_t a, f_elm_t b)
 
     // First 32 bits = 2^5 bits
     for(j = 0; j < 5; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[2]);  // t[2] = a^(2^2  - 1) = a^0b 11
@@ -679,7 +679,7 @@ void f_leg(const f_elm_t a, unsigned char *b)
 
     // First 32 bits = 2^5 bits
     for(j = 0; j < 5; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[2]);  // t[2] = a^(2^2  - 1) = a^0b 11
@@ -774,7 +774,7 @@ void f_sqrt(const f_elm_t a, f_elm_t b)
 
     // First 32 bits = 2^5 bits
     for(j = 0; j < 5; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         f_copy(t[0], t[1]);             // = a^(2^(2^(j+1)) - 1)

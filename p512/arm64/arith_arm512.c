@@ -194,7 +194,7 @@ void f_inv(const f_elm_t a, f_elm_t b)
 
     // First 256 bits = 2^8 bits
     for(j = 0; j < 8; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[2]);  // a^(2^2  - 1) = a^0b 11
@@ -337,7 +337,7 @@ void f_leg(const f_elm_t a, unsigned char *b)
 
     // First 256 bits = 2^8 bits
     for(j = 0; j < 8; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[2]);  // a^(2^2  - 1) = a^0b 11
@@ -473,7 +473,7 @@ void f_sqrt(const f_elm_t a, f_elm_t b){
 
     // First 256 bits = 2^8 bits
     for(j = 0; j < 8; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 5) f_copy(t[0], t[2]);  // a^(2^64 - 1) = a^0b 11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111
@@ -542,7 +542,7 @@ void f_inv(const f_elm_t a, f_elm_t b)
 
     // First 128 bits = 2^7 bits
     for(j = 0; j < 7; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 1) f_copy(t[0], t[2]);  // a^(2^4  - 1) = a^0b 1111
@@ -636,7 +636,7 @@ void f_leg(const f_elm_t a, unsigned char *b)
 
     // First 128 bits = 2^7 bits
     for(j = 0; j < 7; j++){
-        for (i = 0; i < (1 << j); i++)
+        for (i = 0; i < (1u << j); i++)
             f_mul(t[0], t[0], t[0]);
         f_mul(t[0], t[1], t[0]);
         if(j == 0) f_copy(t[0], t[2]);  // a^(2^2  - 1) = a^0b 11
@@ -689,7 +689,7 @@ void f_leg(const f_elm_t a, unsigned char *b)
 
 // a = a0 + a1*a;   a[0] = a0, a[1] = a1, a[2] = a1^2 * w
 // b = a^2 mod x^2 - w; b[0] = a0^2 + a1^2 * w, b[1] = 2 * a0 * a1, b[2] = 4 * a0^2 * a1^2 * w
-void fp_2_sqr(const f_elm_t* a, f_elm_t* b){
+void fp_2_sqr(const f_elm_t a[3], f_elm_t b[3]){
 
     f_elm_t t0, t1, t2;
 
@@ -712,7 +712,7 @@ void fp_2_sqr(const f_elm_t* a, f_elm_t* b){
 // b = b[0] + b[1] * x
 // Modulus = x^2 - w
 // c = a * b = (a0b0 + a1b1 w) + (a0b1 + a1b0) * x
-void fp_2_mul(const f_elm_t* a, const f_elm_t* b, f_elm_t* c, const f_elm_t w){
+void fp_2_mul(const f_elm_t a[3], const f_elm_t b[3], f_elm_t c[3], const f_elm_t w){
     
     f_elm_t t0, t1, t2;
 
@@ -921,7 +921,7 @@ void f_sqrt(const f_elm_t a, f_elm_t b){
 
 //     // First 128 bits = 2^7 bits
 //     for(j = 0; j < 7; j++){
-//         for (i = 0; i < (1 << j); i++)
+//         for (i = 0; i < (1u << j); i++)
 //             f_mul(t[0], t[0], t[0]);
 //         f_mul(t[0], t[1], t[0]);
 //         if(j == 0) f_copy(t[0], t[2]);  // a^(2^2  - 1) = a^0b 11
