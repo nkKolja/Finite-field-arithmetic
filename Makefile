@@ -2,6 +2,16 @@
 CC = gcc
 CFLAGS +=  -std=gnu11 -O3 -ffast-math -Wall -Wextra -Wno-unused-function -Werror
 LDFLAGS += -lgmp
+
+# Detect Homebrew on macOS for GMP library
+ifeq ($(shell uname -s),Darwin)
+  HOMEBREW_PREFIX := $(shell brew --prefix 2>/dev/null || echo /opt/homebrew)
+  ifneq ($(wildcard $(HOMEBREW_PREFIX)/include),)
+    CFLAGS += -I$(HOMEBREW_PREFIX)/include
+    LDFLAGS += -L$(HOMEBREW_PREFIX)/lib
+  endif
+endif
+
 .NOTPARALLEL:
 
 # rest of your Makefile

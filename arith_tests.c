@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
     int function_selector;
     unsigned char *s = calloc(BENCH_LOOPS, sizeof(unsigned char));    
     unsigned char f;
-    f_elm_t *t0 = malloc(BENCH_LOOPS * sizeof(f_elm_t));    
+    f_elm_t *t0 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
     f_elm_t *t1 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
     f_elm_t *t2 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
     f_elm_t s0, s1, s2;
@@ -268,9 +268,12 @@ int main(int argc, char* argv[]){
     free(t1);
     free(s);
 
+    int result = 0;
+    for(int i = 0; i < NUM_TESTS; i++)
+        for(int j = 0; j < TESTS_LEN(i); j++)
+            result |= tests[i][j];
 
-
-    return 0;
+    return result;
 }
 
 

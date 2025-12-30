@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e  # Exit immediately if a command fails       
 
 TARGET="arith"
 BITSIZES=("64" "128" "192" "256" "512")
