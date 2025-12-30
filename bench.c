@@ -76,9 +76,19 @@ int main(int argc, char* argv[]){
 
     const char *function_names[] = {"f_red", "f_add", "f_neg", "f_sub", "f_mul", "f_leg", "f_inv", "f_sqr"};
     int function_selector;
-    unsigned char *s = calloc(BENCH_LOOPS, sizeof(unsigned char));    
-    f_elm_t *t0 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
-    f_elm_t *t1 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
+    unsigned char *s = NULL;
+    f_elm_t *t0 = NULL, *t1 = NULL;
+    int result = 0;
+
+    s = calloc(BENCH_LOOPS, sizeof(unsigned char));
+    t0 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
+    t1 = malloc(BENCH_LOOPS * sizeof(f_elm_t));
+
+    if (!s || !t0 || !t1) {
+        fprintf(stderr, "Error: Memory allocation failed\n");
+        result = 1;
+        goto cleanup;
+    }
 
     // Assign random field values
     for(int i = 0; i < BENCH_LOOPS; i++){
@@ -120,9 +130,9 @@ int main(int argc, char* argv[]){
     }
     printf("\n");
 
+cleanup:
     free(t0);
     free(t1);
     free(s);
-
-    return 0;
+    return result;
 }
