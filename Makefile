@@ -1,77 +1,42 @@
-# Makefile
-CC = gcc
-CFLAGS +=  -std=gnu11 -O3 -ffast-math -Wall -Wextra -Wno-unused-function -Werror
-LDFLAGS += -lgmp
+# Makefile - Wrapper for CMake build system
 
-# Detect Homebrew on macOS for GMP library
-ifeq ($(shell uname -s),Darwin)
-  HOMEBREW_PREFIX := $(shell brew --prefix 2>/dev/null || echo /opt/homebrew)
-  ifneq ($(wildcard $(HOMEBREW_PREFIX)/include),)
-    CFLAGS += -I$(HOMEBREW_PREFIX)/include
-    LDFLAGS += -L$(HOMEBREW_PREFIX)/lib
-  endif
-endif
+.PHONY: all clean test bench configure
+.PHONY: test64_0 test64_1 test128_0 test128_1 test192_0 test192_1 test256_0 test256_1 test512_0 test512_1
+.PHONY: bench64_0 bench64_1 bench128_0 bench128_1 bench192_0 bench192_1 bench256_0 bench256_1 bench512_0 bench512_1
 
-.NOTPARALLEL:
+all: configure
+	@cmake --build build -j4
 
-# rest of your Makefile
+configure:
+	@mkdir -p build
+	@cd build && cmake ..
 
-# Optimization flag
-OPT_LEVEL = $(DEFAULT_OPT_LEVEL)
-DEFAULT_OPT_LEVEL = GENERIC
+test: all
+	@for i in 0 1; do \
+		for size in 64 128 192 256 512; do \
+			./build/test$${size}_$$i; \
+		done; \
+	done
 
-# Alternative primes
-ifeq ($(ALT_PRIMES),ALT)
-PRIMES_VAL=1
-else
-PRIMES_VAL=0
-endif
+bench: all
+	@for i in 0 1; do \
+		for size in 64 128 192 256 512; do \
+			./build/bench$${size}_$$i; \
+		done; \
+	done
 
-# Basic source files
-SRC = random/random.c arith.c bench.c
+# Individual test targets
+test64_0 test64_1 test128_0 test128_1 test192_0 test192_1 test256_0 test256_1 test512_0 test512_1: configure
+	@cmake --build build --target $@ -j4
+	@./build/$@
 
-
-
-# Add arithmetic source files
-ifeq ($(OPT_LEVEL),GENERIC)
-SRC64 = $(SRC)  p64/generic/arith_generic.c
-SRC128 = $(SRC) p128/generic/arith_generic.c
-SRC192 = $(SRC) p192/generic/arith_generic.c
-SRC256 = $(SRC) p256/generic/arith_generic.c
-SRC512 = $(SRC) p512/generic/arith_generic.c
-else ifeq ($(OPT_LEVEL),FAST)
-SRC64 = $(SRC)  p64/arm64/arith_arm64.c   p64/arm64/arith_arm64.S
-SRC128 = $(SRC) p128/arm64/arith_arm128.c p128/arm64/arith_arm128.S
-SRC192 = $(SRC) p192/arm64/arith_arm192.c p192/arm64/arith_arm192.S
-SRC256 = $(SRC) p256/arm64/arith_arm256.c p256/arm64/arith_arm256.S
-SRC512 = $(SRC) p512/arm64/arith_arm512.c p512/arm64/arith_arm512.S
-endif
-
-.PHONY: all arith clean
-
-all: arith
-
-arith: arith64 arith128 arith192 arith256 arith512
-
-
-arith64: arith_tests.c $(SRC64)
-	$(CC) $(CFLAGS) $(LDFLAGS)  -DSEC_LEVEL=0 -DPRIMES=$(PRIMES_VAL) -o $@ $^
-
-arith128: arith_tests.c $(SRC128)
-	$(CC) $(CFLAGS) $(LDFLAGS)  -DSEC_LEVEL=1 -DPRIMES=$(PRIMES_VAL) -o $@ $^
-
-arith192: arith_tests.c $(SRC192)
-	$(CC) $(CFLAGS) $(LDFLAGS)  -DSEC_LEVEL=2 -DPRIMES=$(PRIMES_VAL) -o $@ $^
-
-arith256: arith_tests.c $(SRC256)
-	$(CC) $(CFLAGS) $(LDFLAGS)  -DSEC_LEVEL=3 -DPRIMES=$(PRIMES_VAL) -o $@ $^
-
-arith512: arith_tests.c $(SRC512)
-	$(CC) $(CFLAGS) $(LDFLAGS)  -DSEC_LEVEL=4 -DPRIMES=$(PRIMES_VAL) -o $@ $^
-
+# Individual benchmark targets
+bench64_0 bench64_1 bench128_0 bench128_1 bench192_0 bench192_1 bench256_0 bench256_1 bench512_0 bench512_1: configure
+	@cmake --build build --target $@ -j4
+	@./build/$@
 
 clean:
-	rm -f arith64 arith128 arith192 arith256 arith512
+	@rm -rf build
 
 
 

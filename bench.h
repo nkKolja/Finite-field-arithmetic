@@ -9,7 +9,7 @@
 // Benchmarking
 #define WARMUP          5000
 #define BENCH_LOOPS     15000
-#define TEST_LOOPS      5000
+#define TEST_LOOPS      256
 #define CLK_PER_SEC     3.5E9
 #define CLK_PER_nSEC    3.5
 
