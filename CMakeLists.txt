@@ -7,28 +7,22 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # Compiler flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -O3 -ffast-math -Wall -Wextra -Wno-unused-function -Werror")
 
-# Find GMP library
-find_library(GMP_LIBRARY gmp REQUIRED)
-if(NOT GMP_LIBRARY)
-    message(FATAL_ERROR "GMP library not found. Please install libgmp-dev (Linux) or gmp (Homebrew)")
-endif()
-
 # Common source files
 set(COMMON_SOURCES
-    random/random.c
-    arith.c
+    src/random/random.c
+    src/arith.c
 )
 
 # Test sources
 set(TEST_SOURCES
     ${COMMON_SOURCES}
-    tests.c
+    tests/tests.c
 )
 
 # Benchmark sources
 set(BENCH_SOURCES
     ${COMMON_SOURCES}
-    bench.c
+    benchmarks/bench.c
 )
 
 # Option for optimization level
@@ -62,14 +56,14 @@ foreach(CONFIG ${PRIME_CONFIGS})
     # Determine source files based on optimization level
     if(USE_ARM_OPTIMIZATIONS AND CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
         set(PRIME_SOURCES
-            ${DIR_NAME}/arm64/arith_arm${SIZE_BITS}.c
-            ${DIR_NAME}/arm64/arith_arm${SIZE_BITS}.S
-            ${DIR_NAME}/prime_params.c
+            src/primes/${DIR_NAME}/arm64/arith_arm${SIZE_BITS}.c
+            src/primes/${DIR_NAME}/arm64/arith_arm${SIZE_BITS}.S
+            src/primes/${DIR_NAME}/prime_params.c
         )
     else()
         set(PRIME_SOURCES
-            ${DIR_NAME}/generic/arith_generic.c
-            ${DIR_NAME}/prime_params.c
+            src/primes/${DIR_NAME}/generic/arith_generic.c
+            src/primes/${DIR_NAME}/prime_params.c
         )
     endif()
     
@@ -91,17 +85,13 @@ foreach(CONFIG ${PRIME_CONFIGS})
     
     # Add include directories for both targets
     target_include_directories(${TEST_TARGET} PRIVATE
-        ${CMAKE_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/${DIR_NAME}
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/src/primes/${DIR_NAME}
     )
     target_include_directories(${BENCH_TARGET} PRIVATE
-        ${CMAKE_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/${DIR_NAME}
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/src/primes/${DIR_NAME}
     )
-    
-    # Link GMP for both targets
-    target_link_libraries(${TEST_TARGET} ${GMP_LIBRARY})
-    target_link_libraries(${BENCH_TARGET} ${GMP_LIBRARY})
     
     # Add test to test suite
     add_test(NAME ${TEST_TARGET} COMMAND ${TEST_TARGET})
@@ -116,4 +106,3 @@ message(STATUS "Build configuration:")
 message(STATUS "  Compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "  Flags: ${CMAKE_C_FLAGS}")
 message(STATUS "  ARM optimizations: ${USE_ARM_OPTIMIZATIONS}")
-message(STATUS "  GMP library: ${GMP_LIBRARY}")
