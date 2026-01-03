@@ -7,9 +7,14 @@ on:
     branches: [ main, master, develop ]
 
 jobs:
-  test-generic:
-    name: Generic Tests (x86_64)
+  test:
+    name: Test ${{ matrix.prime }}
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        prime: [test64_0, test64_1, test128_0, test128_1, test192_0, test192_1, test256_0, test256_1, test512_0, test512_1]
     
     steps:
       - name: Checkout code
@@ -18,43 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential libgmp-dev
+          sudo apt-get install -y build-essential cmake
       
-      - name: Build and test with original primes
-        run: make all OPT_LEVEL=GENERIC
-      
-      - name: Test 64-bit prime
-        run: ./arith64
-      
-      - name: Test 128-bit prime
-        run: ./arith128
-      
-      - name: Test 192-bit prime
-        run: ./arith192
-      
-      - name: Test 256-bit prime
-        run: ./arith256
-      
-      - name: Test 512-bit prime
-        run: ./arith512
-      
-      - name: Clean
-        run: make clean
-      
-      - name: Build and test with alternative primes
-        run: make all OPT_LEVEL=GENERIC ALT_PRIMES=ALT
-      
-      - name: Test 64-bit alternative prime
-        run: ./arith64
-      
-      - name: Test 128-bit alternative prime
-        run: ./arith128
-      
-      - name: Test 192-bit alternative prime
-        run: ./arith192
-      
-      - name: Test 256-bit alternative prime
-        run: ./arith256
-      
-      - name: Test 512-bit alternative prime
-        run: ./arith512
+      - name: Build and test ${{ matrix.prime }}
+        run: make ${{ matrix.prime }}
