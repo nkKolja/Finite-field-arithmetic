@@ -11,7 +11,7 @@ void f_red(f_elm_t a)
 
     t0[0] = (a[WORDS_FIELD - 1] >> 63) * 19;
     a[WORDS_FIELD - 1] &= 0x7FFFFFFFFFFFFFFF;
-    
+
     for (int i = 0; i < WORDS_FIELD; i++)
         ADDC(carry, a[i], t0[i], a[i]);
 
