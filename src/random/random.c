@@ -20,8 +20,8 @@ int randombytes(void *buf, size_t len) {
 
 #if defined(_WIN32)
 
-    if (BCryptGenRandom(NULL, buf, (ULONG)len,
-                        BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
+    if (!BCRYPT_SUCCESS(BCryptGenRandom(NULL, buf, (ULONG)len,
+                        BCRYPT_USE_SYSTEM_PREFERRED_RNG)))
         return -1;
     return 0;
 
@@ -29,7 +29,7 @@ int randombytes(void *buf, size_t len) {
 
     unsigned char *p = buf;
     while (len) {
-        ssize_t r = getrandom(p, len, 0);
+        ssize_t r = getrandom(p, len, GRND_NONBLOCK);
         if (r < 0) {
             if (errno == EINTR) continue;
             return -1;
